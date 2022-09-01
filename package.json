@@ -1,8 +1,9 @@
 {
-  "name": "exptech-api-wrapper",
+  "name": "@kamiya4047/exptech-api-wrapper",
   "version": "1.0.0",
   "description": "ExpTech API wrapper",
   "main": "index.js",
+  "types": "./@types/index.d.ts",
   "directories": {
     "test": "test"
   },
