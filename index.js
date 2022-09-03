@@ -287,4 +287,4 @@ class ExpTech {
   }
 }
 
-module.exports = ExpTech;
+module.exports.default = ExpTech;
