@@ -3,7 +3,7 @@
   "version": "1.0.2",
   "description": "ExpTech API wrapper",
   "main": "index.js",
-  "types": "./@types/index.d.ts",
+  "types": "./types/index.d.ts",
   "directories": {
     "test": "test"
   },
