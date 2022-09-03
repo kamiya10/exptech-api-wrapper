@@ -7,7 +7,7 @@ npm install @kamiya4047/exptech-api-wrapper
 ## Usage
 API documentation can be found [here](https://github.com/ExpTechTW/API/blob/master/RULE.md).
 ```js
-const ExpTech = require("@kamiya4047/exptech-api-wrapper");
+const ExpTech = require("@kamiya4047/exptech-api-wrapper").default;
 const api = new ExpTech(/* YOUR API KEY HERE */);
 ```
 
