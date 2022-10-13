@@ -1,7 +1,5 @@
 const fetch = require("node-fetch").default;
 
-const baseurl = "https://exptech.com.tw";
-
 class Request {
   constructor(apiKey, apiVersion) {
     this.apiKey = apiKey ?? "https://github.com/ExpTechTW";
