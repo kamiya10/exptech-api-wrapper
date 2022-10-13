@@ -73,53 +73,48 @@ interface APITimestamp {
   Full: number;
 }
 
-declare class V1Data {
-  constructor(apiKey: string)
-  apiKey: String;
-
-  /**
-   * Gets earthquake reports
-   * @param {number} limit
-   * @returns {EarthquakeReport[]}
-   */
-  getEarthquakeReports(limit?: number): Promise<EarthquakeReport[]>;
-
-  getRadarURL(): Promise<string>;
-
-  getSatelliteURL(): Promise<string>;
-
-  getAccumulationURL(): Promise<string>;
-
-  getPrecipitationForecastURL(): Promise<string>;
-
-  /**
-   * Gets realtime data from TREM stations.
-   * @param {number} time
-   * @returns {object}
-   */
-  getRealtimeStationData(time?: number): Promise<object>;
-
-  /**
-   * Gets the latest eew data
-   * @param {"JMA_earthquake" | "KMA_earthquake" | "NIED_earthquake" | "earthquake" | "FJDZJ_earthquake" | "ICL_earthquake"} provider
-   * @returns {EEWData}
-   */
-  getEEW(provider: "JMA_earthquake" | "KMA_earthquake" | "NIED_earthquake" | "earthquake" | "FJDZJ_earthquake" | "ICL_earthquake"): Promise<EEWData>;
-
-  /**
-   * Gets the latest realtime data
-   * @returns {PAlertData}
-   */
-  getPAlertData(): Promise<PAlertData>;
-}
-
 /**
  * The v1 ExpTech API wrapper
  */
-declare class V1 {
+declare class V0 {
   constructor(apiKey: string);
   apiKey: string;
-  data: V1Data;
+  data: {
+    /**
+     * Gets earthquake reports
+     * @param {number} limit
+     * @returns {EarthquakeReport[]}
+     */
+    getEarthquakeReports(limit?: number): Promise<EarthquakeReport[]>,
+
+    getRadarURL(): Promise<string>,
+
+    getSatelliteURL(): Promise<string>,
+
+    getAccumulationURL(): Promise<string>,
+
+    getPrecipitationForecastURL(): Promise<string>,
+
+    /**
+     * Gets realtime data from TREM stations.
+     * @param {number} time
+     * @returns {object}
+     */
+    getRealtimeStationData(time?: number): Promise<object>,
+
+    /**
+     * Gets the latest eew data
+     * @param {"JMA_earthquake" | "KMA_earthquake" | "NIED_earthquake" | "earthquake" | "FJDZJ_earthquake" | "ICL_earthquake"} provider
+     * @returns {EEWData}
+     */
+    getEEW(provider: "JMA_earthquake" | "KMA_earthquake" | "NIED_earthquake" | "earthquake" | "FJDZJ_earthquake" | "ICL_earthquake"): Promise<EEWData>,
+
+    /**
+     * Gets the latest realtime data
+     * @returns {PAlertData}
+     */
+    getPAlertData(): Promise<PAlertData>,
+  };
 
   /**
    * Gets the current API timestamp.
@@ -135,12 +130,37 @@ declare class V1 {
   isURLSafe(url: string): Promise<boolean>
 }
 
+
+/**
+ * The v1 ExpTech API wrapper
+ */
+ declare class V1 {
+  constructor(apiKey: string);
+  apiKey: string;
+  earthquake: {
+    /**
+     * Gets earthquake reports
+     * @param {number} limit
+     * @returns {EarthquakeReport[]}
+     */
+    getReports(limit?: number): Promise<EarthquakeReport[]>,
+
+    /**
+     * Gets earthquake report by specific report number
+     * @param {number} earthquakeNo
+     * @returns {EarthquakeReport[]}
+     */
+    getReportByNumber(earthquakeNo?: number): Promise<EarthquakeReport>,
+  }
+}
+
 declare class ExpTech {
   /**
    * @param {string} [apiKey="https://github.com/ExpTechTW"] The api key to uuse
    */
   constructor(apiKey?: string);
   apiKey: string;
+  v0: V0;
   v1: V1;
 }
 
