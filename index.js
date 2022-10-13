@@ -50,21 +50,6 @@ class V0 extends Request {
     super(apiKey, 0);
     this.data = {
       /**
-       * Gets earthquake reports
-       * @param {number} id
-       * @returns {Promise<EarthquakeReport[]>}
-       */
-      getEarthquakeReport: async (id = 50) => {
-        if (!Number.isInteger(id)) throw new TypeError(`"${id}" is not a integer`);
-        const data = await this.post("/post", {
-          Function : "data",
-          Type     : "report",
-          Value    : id,
-        });
-        return data.response;
-      },
-
-      /**
        * @typedef {object} EarthquakeReport
        * @property {string} identifier Report id
        * @property {number} earthquakeNo Report number
@@ -105,6 +90,21 @@ class V0 extends Request {
           Function : "data",
           Type     : "earthquake",
           Value    : limit,
+        });
+        return data.response;
+      },
+
+      /**
+       * Gets a earthquake report with specific report number
+       * @param {number} id
+       * @returns {Promise<EarthquakeReport>}
+       */
+      getEarthquakeReport: async (id) => {
+        if (!Number.isInteger(id)) throw new TypeError(`"${id}" is not a integer`);
+        const data = await this.post("/post", {
+          Function : "data",
+          Type     : "report",
+          Value    : id,
         });
         return data.response;
       },

@@ -87,6 +87,13 @@ declare class V0 {
      */
     getEarthquakeReports(limit?: number): Promise<EarthquakeReport[]>,
 
+    /**
+     * Gets a earthquake report with specific report number
+     * @param {number} id
+     * @returns {EarthquakeReport[]}
+     */
+     getEarthquakeReport(id?: number): Promise<EarthquakeReport>,
+
     getRadarURL(): Promise<string>,
 
     getSatelliteURL(): Promise<string>,
@@ -146,7 +153,7 @@ declare class V0 {
     getReports(limit?: number): Promise<EarthquakeReport[]>,
 
     /**
-     * Gets earthquake report by specific report number
+     * Gets a earthquake report with specific report number
      * @param {number} earthquakeNo
      * @returns {EarthquakeReport[]}
      */

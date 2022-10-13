@@ -54,6 +54,16 @@ describe("ExpTech", function() {
         });
       });
 
+      describe("getEarthquakeReport()", function() {
+        it("should return a report with report number 111111", async function() {
+          const data = await api.v0.data.getEarthquakeReport(111111);
+          data.should.have.property("No", "111111");
+        });
+        it("should throw error when limit is not an integer", async function() {
+          (async () => await api.v0.data.getEarthquakeReport(2.3))().should.eventually.throw(TypeError);
+        });
+      });
+
       describe("getRadarURL()", function() {
         it("should return a url", async function() {
           const data = await api.v0.data.getRadarURL();
@@ -129,9 +139,9 @@ describe("ExpTech", function() {
       });
 
       describe("getReportByNumber()", function() {
-        it("should return a report with number 111111", async function() {
+        it("should return a report with report number 111111", async function() {
           const data = await api.v1.earthquake.getReportByNumber(111111);
-          data.should.length(15);
+          data.should.have.property("No", "111111");
         });
         it("should throw error when report number is not an integer", async function() {
           (async () => await api.v1.earthquake.getReports(2.3))().should.eventually.throw(TypeError);
