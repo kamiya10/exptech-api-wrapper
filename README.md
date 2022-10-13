@@ -14,16 +14,17 @@ const api = new ExpTech(/* YOUR API KEY HERE */);
 ### Versions
 Different api versions are stored under the `ExpTech` class.
 ```js
+api.v0 // v0
 api.v1 // v1
 ```
 
 ### Example
 urlChecker
 ```js
-console.log(await api.v1.isURLSafe("https://google.com"));
+console.log(await api.v0.isURLSafe("https://google.com"));
 // true
 ```
 
 ## API Support
-- [x] API v1
-- [ ] API v2
+- [x] API v0
+- [ ] API v1 (Partially Supported)
