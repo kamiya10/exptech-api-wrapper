@@ -1,7 +1,7 @@
 const fetch = require("node-fetch").default;
 
-class Request {
-  constructor(apiKey, apiVersion) {
+class RequestMaker {
+  constructor(apiKey, apiVersion = 1) {
     this.apiKey = apiKey ?? "https://github.com/ExpTechTW";
     switch (apiVersion) {
       case 0:
@@ -45,7 +45,7 @@ class Request {
 /**
  * The v1 ExpTech API wrapper
  */
-class V0 extends Request {
+class V0 extends RequestMaker {
   constructor(apiKey) {
     super(apiKey, 0);
     this.data = {
@@ -271,7 +271,7 @@ class V0 extends Request {
   }
 }
 
-class V1 extends Request {
+class V1 extends RequestMaker {
   constructor(apiKey) {
     super(apiKey, 1);
     this.earthquake = {
