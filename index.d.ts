@@ -82,7 +82,19 @@ declare class Request {
   apiKey: string;
   baseurl: string;
 
+  /**
+   * Makes a direct HTTP GET request to the api.
+   * @param {string} endpoint
+   * @param {Object} parms
+   */
   get(endpoint: string, parms?: Object): Promise<any>;
+
+
+  /**
+   * Makes a direct HTTP POST request to the api.
+   * @param {string} endpoint
+   * @param {Object} body
+   */
   post(endpoint: string, body?: Object): Promise<any>;
 }
 
