@@ -73,10 +73,23 @@ interface APITimestamp {
   Full: number;
 }
 
+declare class Request {
+  /**
+   * @param {string} [apiKey="https://github.com/ExpTechTW"] The api key to uuse
+   */
+  constructor(apiKey?: string, apiVersion: 0 | 1);
+
+  apiKey: string;
+  baseurl: string;
+
+  get(endpoint: string, parms?: Object): Promise<any>;
+  post(endpoint: string, body?: Object): Promise<any>;
+}
+
 /**
  * The v1 ExpTech API wrapper
  */
-declare class V0 {
+declare class V0 extends Request {
   constructor(apiKey: string);
   apiKey: string;
   data: {
@@ -141,7 +154,7 @@ declare class V0 {
 /**
  * The v1 ExpTech API wrapper
  */
- declare class V1 {
+ declare class V1 extends Request {
   constructor(apiKey: string);
   apiKey: string;
   earthquake: {
