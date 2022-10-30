@@ -83,6 +83,7 @@ class V0 extends RequestMaker {
        * Gets earthquake reports
        * @param {number} limit
        * @returns {Promise<EarthquakeReport[]>}
+       * @deprecated as announced in ExpecTechTW Discord server
        */
       getEarthquakeReports: async (limit = 50) => {
         if (!Number.isInteger(limit)) throw new TypeError(`"${limit}" is not a integer`);
@@ -98,6 +99,7 @@ class V0 extends RequestMaker {
        * Gets a earthquake report with specific report number
        * @param {number} id
        * @returns {Promise<EarthquakeReport>}
+       * @deprecated as announced in ExpecTechTW Discord server
        */
       getEarthquakeReport: async (id) => {
         if (!Number.isInteger(id)) throw new TypeError(`"${id}" is not a integer`);
@@ -145,6 +147,7 @@ class V0 extends RequestMaker {
        * Gets realtime data from TREM stations.
        * @param {number} time
        * @returns {Promise<object>}
+       * @deprecated as announced in ExpecTechTW Discord server
        */
       getRealtimeStationData: async (time = 0) => {
         if (!Number.isInteger(time)) throw new TypeError(`"${time}" is not a integer`);
@@ -181,6 +184,7 @@ class V0 extends RequestMaker {
        * Gets the latest EEW data.
        * @param {"JMA_earthquake" | "KMA_earthquake" | "NIED_earthquake" | "earthquake" | "FJDZJ_earthquake" | "ICL_earthquake"} provider Specify the EEW provider
        * @returns {Promise<EEWData>}
+       * @deprecated as announced in ExpecTechTW Discord server
        */
       getEEW: async (provider = "earthquake") => {
         const data = await this.post("/post", {
@@ -219,6 +223,7 @@ class V0 extends RequestMaker {
       /**
        * Gets the latest realtime data
        * @returns {Promise<PAlertData>}
+       * @deprecated as announced in ExpecTechTW Discord server
        */
       getPAlertData: async () => {
         const data = await this.post("/post", {
