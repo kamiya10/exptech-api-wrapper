@@ -132,7 +132,7 @@ class V1 extends RequestMaker {
     /**
      * Fetch earthquake reports.
      * @param {number} [limit = 15] How many reports should be fetched.
-     * @returns {EarthquakeReport[]} An array of EarthquakeReport
+     * @returns {Promise<EarthquakeReport[]>} An array of EarthquakeReport
      * @example
      * // Fetch 10 reports
      * // will return a DetailedEarthquakeReport[]
@@ -143,7 +143,7 @@ class V1 extends RequestMaker {
     /**
      * Fetch a specific earthquake report by its number.
      * @param {number} earthquakeNo The report number to fetch.
-     * @returns {DetailedEarthquakeReport} DetailedEarthquakeReport
+     * @returns {Promise<DetailedEarthquakeReport>} DetailedEarthquakeReport
      * @example
      * // Fetch the report numbered 111127
      * // will return a DetailedEarthquakeReport
