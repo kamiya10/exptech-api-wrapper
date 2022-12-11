@@ -1,5 +1,9 @@
 const fetch = require("node-fetch").default;
 
+/**
+ * Api request maker
+ * @class RequestMaker
+ */
 class RequestMaker {
   constructor(apiKey, apiVersion = 1) {
     this.apiKey = apiKey ?? "https://github.com/ExpTechTW";
@@ -21,8 +25,10 @@ class RequestMaker {
 
     if (!response.ok)
       throw new Error(`The server responded with status code ${response.status}`);
+    else if (response.status == 200)
+      return response.json();
 
-    return response.json();
+    return true;
   }
 
   async post(endpoint, body = {}) {
@@ -37,254 +43,159 @@ class RequestMaker {
 
     if (!response.ok)
       throw new Error(`The server responded with status code ${response.status}`);
+    else if (response.status == 200)
+      return response.json();
 
-    return response.json();
+    return true;
   }
 }
 
 /**
- * The v1 ExpTech API wrapper
+ * The v1 api
+ * @class V1
+ * @extends RequestMaker
  */
-class V0 extends RequestMaker {
-  constructor(apiKey) {
-    super(apiKey, 0);
-    this.data = {
-      /**
-       * @typedef {object} EarthquakeReport
-       * @property {string} identifier Report id
-       * @property {number} earthquakeNo Report number
-       * @property {number} epicenterLon Epicenter longitude
-       * @property {number} epicenterLat Epicenter latitude
-       * @property {string} location Epicenter location
-       * @property {number} depth Earthquake depth
-       * @property {number} magnitudeValue Earthquake magnitude
-       * @property {string} originTime Earthquake time
-       * @property {EarthquakeDetail[]} data
-       * @property {[]} ID EEW ids
-       */
-
-      /**
-       * @typedef {object} EarthquakeDetail
-       * @property {string} areaName
-       * @property {number} areaIntensity
-       * @property {EarthquakeStation[]} eqStation
-       */
-
-      /**
-       * @typedef {object} EarthquakeStation
-       * @property {string} stationName
-       * @property {number} stationLon
-       * @property {number} stationLat
-       * @property {number} distance
-       * @property {number} stationIntensity
-       */
-
-      /**
-       * Gets earthquake reports
-       * @param {number} limit
-       * @returns {Promise<EarthquakeReport[]>}
-       * @deprecated as announced in ExpTechTW Discord server
-       */
-      getEarthquakeReports: async (limit = 50) => {
-        if (!Number.isInteger(limit)) throw new TypeError(`"${limit}" is not a integer`);
-        const data = await this.post("/post", {
-          Function : "data",
-          Type     : "earthquake",
-          Value    : limit,
-        });
-        return data.response;
-      },
-
-      /**
-       * Gets a earthquake report with specific report number
-       * @param {number} id
-       * @returns {Promise<EarthquakeReport>}
-       * @deprecated as announced in ExpTechTW Discord server
-       */
-      getEarthquakeReport: async (id) => {
-        if (!Number.isInteger(id)) throw new TypeError(`"${id}" is not a integer`);
-        const data = await this.post("/post", {
-          Function : "data",
-          Type     : "report",
-          Value    : id,
-        });
-        return data.response;
-      },
-
-      getRadarURL: async () => {
-        const data = await this.post("/post", {
-          Function : "data",
-          Type     : "radar",
-        });
-        return `https://exptech.com.tw/get?Function=File&Path=${data.response}`;
-      },
-
-      getSatelliteURL: async () => {
-        const data = await this.post("/post", {
-          Function : "data",
-          Type     : "satellite",
-        });
-        return `https://exptech.com.tw/get?Function=File&Path=${data.response}`;
-      },
-
-      getAccumulationURL: async () => {
-        const data = await this.post("/post", {
-          Function : "data",
-          Type     : "accumulation",
-        });
-        return `https://exptech.com.tw/get?Function=File&Path=${data.response}`;
-      },
-
-      getPrecipitationForecastURL: async () => {
-        const data = await this.post("/post", {
-          Function : "data",
-          Type     : "PrecipitationForecast",
-        });
-        return `https://exptech.com.tw/get?Function=File&Path=${data.response}`;
-      },
-
-      /**
-       * Gets realtime data from TREM stations.
-       * @param {number} time
-       * @returns {Promise<object>}
-       * @deprecated as announced in ExpTechTW Discord server
-       */
-      getRealtimeStationData: async (time = 0) => {
-        if (!Number.isInteger(time)) throw new TypeError(`"${time}" is not a integer`);
-        const data = await this.post("/post", {
-          Function : "data",
-          Type     : "TREM",
-          Value    : time,
-        });
-        return data.response;
-      },
-
-      /**
-       * @typedef {object} EEWData
-       * @property {string} Function
-       * @property {string} Type
-       * @property {number} Time
-       * @property {string} EastLongitude
-       * @property {string} NorthLatitude
-       * @property {number} Depth
-       * @property {string} Scale
-       * @property {number} FormatVersion
-       * @property {number} TimeStamp
-       * @property {string} UTC\u002b8
-       * @property {number} Version
-       * @property {string} APITimeStamp
-       * @property {string} ID
-       * @property {string} Location
-       * @property {boolean} Cancel
-       * @property {string} Unit
-       * @property {boolean} Test
-       */
-
-      /**
-       * Gets the latest EEW data.
-       * @param {"JMA_earthquake" | "KMA_earthquake" | "NIED_earthquake" | "earthquake" | "FJDZJ_earthquake" | "ICL_earthquake"} provider Specify the EEW provider
-       * @returns {Promise<EEWData>}
-       * @deprecated as announced in ExpTechTW Discord server
-       */
-      getEEW: async (provider = "earthquake") => {
-        const data = await this.post("/post", {
-          Function : "data",
-          Type     : "EEW-v1",
-          Value    : provider,
-        });
-        return data.response;
-      },
-
-      /**
-       * @typedef {object} PAlertData
-       * @property {string} Function
-       * @property {number} TimeStamp
-       * @property {number} FormatVersion
-       * @property {PGAData} Data
-       */
-
-      /**
-       * @typedef {object} PGAData
-       * @property {Intensity[]} data
-       * @property {string} time
-       * @property {number} unix
-       * @property {number} timestamp
-       * @property {number} station
-       * @property {boolean} final
-       * @property {string} img
-       */
-
-      /**
-       * @typedef {object} Intensity
-       * @property {string} loc
-       * @property {number} intensity
-       */
-
-      /**
-       * Gets the latest realtime data
-       * @returns {Promise<PAlertData>}
-       * @deprecated as announced in ExpTechTW Discord server
-       */
-      getPAlertData: async () => {
-        const data = await this.post("/post", {
-          Function : "data",
-          Type     : "palert",
-        });
-        return data.response;
-      } };
-  }
-
-  /**
-   * @typedef {object} APITimestamp
-   * @property {number} Value
-   * @property {number} Full
-   */
-
-  /**
-   * Gets the current API timestamp.
-   * @returns {Promise<APITimestamp>}
-   */
-  async getAPITimestamp() {
-    return await this.get("/get", { Function: "NTP" });
-  }
-
-  /**
-   * Check url safety
-   * @param {string} url The url to check
-   * @returns {Promise<boolean>}
-   */
-  async isURLSafe(url) {
-    if (typeof url != "string") throw new TypeError(`"${url}" is not a string`);
-    if (!url.match(/^https?:\/\/.+/)) throw new TypeError(`"${url}" is not a valid URL`);
-    const data = await this.post("/post", {
-      Function      : "et",
-      Type          : "urlChecker",
-      Value         : url,
-      FormatVersion : 2,
-      Addition      : {
-        FuzzyMatch: true,
-      },
-    });
-
-    if (data.state === "Success")
-      if (data.response === "All URL inspections passed")
-        return true;
-      else
-        return false;
-    else
-      throw new Error(data.response);
-  }
-}
-
 class V1 extends RequestMaker {
   constructor(apiKey) {
     super(apiKey, 1);
     this.earthquake = {
+      /**
+        * @typedef {object} EarthquakeReport
+        * @property {string} identifier
+        * @property {number} earthquakeNo
+        * @property {number} epicenterLon
+        * @property {number} epicenterLat
+        * @property {string} location
+        * @property {number} depth
+        * @property {number} magnitudeValue
+        * @property {string} originTime
+        * @property {data[]} data
+        * @property {number[]} ID
+        */
+
+      /**
+        * @typedef {object} data
+        * @property {string} areaName
+        * @property {number} areaIntensity
+        * @property {eqStation[]} eqStation
+        */
+
+      /**
+        * @typedef {object} eqStation
+        * @property {string} stationName
+        * @property {number} stationLon
+        * @property {number} stationLat
+        * @property {number} distance
+        * @property {number} stationIntensity
+        */
+
+      /**
+       * Fetch earthquake reports.
+       * @param {number} [limit = 15] How many reports should be fetched.
+       * @returns {EarthquakeReport[]}
+       * @example
+       * // Fetch 10 reports
+       * // will return a DetailedEarthquakeReport[]
+       * const reports = await ExptechAPI.v1.earthquake.getReports(10);
+       */
       getReports: async (limit = 15) => {
         return await this.get("/earthquake/reports", {
           limit,
         });
       },
+
+      /**
+        * @typedef {object} DetailedEarthquakeReport
+        * @property {"report"} Function
+        * @property {number} Time
+        * @property {string} EastLongitude
+        * @property {string} NorthLatitude
+        * @property {string} Depth
+        * @property {string} Scale
+        * @property {string} `UTC\+8`
+        * @property {string} Location
+        * @property {string} Max
+        * @property {string} EventImage
+        * @property {string} ShakeImage
+        * @property {string} Web
+        * @property {string} No
+        * @property {number} TimeStamp
+        * @property {Intensity[]} Intensity
+        */
+
+      /**
+        * @typedef {object} Intensity
+        * @property {string} areaDesc
+        * @property {areaMaxIntensity} areaMaxIntensity
+        * @property {station} station
+        */
+
+      /**
+        * @typedef {object} areaMaxIntensity
+        * @property {string} unit
+        * @property {string} $t
+        */
+
+      /**
+        * @typedef {object} station
+        * @property {string} stationName
+        * @property {string} stationCode
+        * @property {stationLon} stationLon
+        * @property {stationLat} stationLat
+        * @property {distance} distance
+        * @property {azimuth} azimuth
+        * @property {stationIntensity} stationIntensity
+        * @property {pga} pga
+        * @property {string} waveImageURI
+        */
+
+      /**
+        * @typedef {object} stationLon
+        * @property {string} unit
+        * @property {string} $t
+        */
+
+      /**
+        * @typedef {object} stationLat
+        * @property {string} unit
+        * @property {string} $t
+        */
+
+      /**
+        * @typedef {object} distance
+        * @property {string} unit
+        * @property {string} $t
+        */
+
+      /**
+        * @typedef {object} azimuth
+        * @property {string} unit
+        * @property {string} $t
+        */
+
+      /**
+        * @typedef {object} stationIntensity
+        * @property {string} unit
+        * @property {string} $t
+        */
+
+      /**
+        * @typedef {object} pga
+        * @property {string} unit
+        * @property {string} vComponent
+        * @property {string} nsComponent
+        * @property {string} ewComponent
+        */
+
+      /**
+       * Fetch a specific earthquake report by its number.
+       * @param {number} earthquakeNo The report number to fetch.
+       * @returns {DetailedEarthquakeReport}
+       * @example
+       * // Fetch the report numbered 111127
+       * // will return a DetailedEarthquakeReport
+       * const report = await ExptechAPI.v1.earthquake.getReportByNumber(111127);
+       */
       getReportByNumber: async (earthquakeNo) => {
         if (!Number.isInteger(earthquakeNo)) throw new TypeError(`"${earthquakeNo}" is not a integer`);
         return await this.get(`/earthquake/reports/${earthquakeNo}`);
@@ -293,15 +204,16 @@ class V1 extends RequestMaker {
   }
 }
 
-class ExpTech {
+class ExptechAPI {
   /**
    * @param {string} [apiKey="https://github.com/ExpTechTW"] The api key to uuse
    */
   constructor(apiKey) {
-    this.apiKey = apiKey ?? "https://github.com/ExpTechTW";
-    this.v0 = new V0();
-    this.v1 = new V1();
+    /**
+     * @type {V1} The v1 api.
+     */
+    this.v1 = new V1(apiKey);
   }
 }
 
-module.exports.default = ExpTech;
+module.exports = { ExptechAPI };

@@ -7,22 +7,22 @@ npm install @kamiya4047/exptech-api-wrapper
 ## Usage
 API documentation can be found [here](https://github.com/ExpTechTW/API/blob/master/RULE.md).
 ```js
-const ExpTech = require("@kamiya4047/exptech-api-wrapper").default;
-const api = new ExpTech(/* YOUR API KEY HERE */);
+const { ExptechAPI } = require("@kamiya4047/exptech-api-wrapper");
+const api = new ExptechAPI(/* YOUR API KEY HERE */);
 ```
 
 ### Versions
 Different api versions are stored under the `ExpTech` class.
 ```js
-api.v0 // v0
 api.v1 // v1
 ```
 
 ### Example
-urlChecker
+getReports
 ```js
-console.log(await api.v0.isURLSafe("https://google.com"));
-// true
+(async () => {
+    console.log(await api.v1.earthquake.getReports(10));
+})();
 ```
 
 ### Making a direct request to the api
@@ -32,5 +32,4 @@ await api.v1.get(endpoint, params);
 ```
 
 ## API Support
-- [x] API v0
-- [ ] API v1 (Partially Supported)
+- [x] API v1 (Partially Supported)
