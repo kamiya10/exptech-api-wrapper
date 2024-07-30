@@ -5,7 +5,7 @@
   "unpkg": "dist/index.min.js",
   "module": "dist/index.mjs",
   "main": "dist/index.js",
-  "types": "types/index.d.ts",
+  "types": "dist/types/index.d.ts",
   "license": "MIT",
   "author": {
     "name": "Kamiya",
@@ -17,13 +17,13 @@
     "url": "git+https://github.com/kamiya10/exptech-api-wrapper"
   },
   "files": [
-    "dist",
-    "types"
+    "dist/*"
   ],
   "exports": {
     ".": {
       "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
+      "require": "./dist/index.js",
+      "types": "./dist/types/index.d.ts"
     },
     "./package.json": "./package.json"
   },
