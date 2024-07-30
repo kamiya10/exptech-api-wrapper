@@ -7,16 +7,19 @@ export default {
 	input: 'src/index.ts',
 	output: [{
 		format: 'esm',
+    exports: 'named',
 		file: pkg.module,
 		sourcemap: false,
 	}, {
 		format: 'cjs',
+    exports: 'named',
 		file: pkg.main,
 		sourcemap: false,
 		esModule: false,
 	}, {
 		name: pkg['umd:name'] || pkg.name,
 		format: 'umd',
+    exports: 'named',
 		file: pkg.unpkg,
 		sourcemap: false,
 		esModule: false,
