@@ -1,7 +1,6 @@
 {
   "version": "3.1.0",
   "name": "@kamiya4047/exptech-api-wrapper",
-  "repository": "@kamiya4047/exptech-api-wrapper",
   "description": "ExpTech API wrapper",
   "unpkg": "dist/index.min.js",
   "module": "dist/index.mjs",
@@ -12,6 +11,10 @@
     "name": "Kamiya",
     "email": "58339640+kamiya10@users.noreply.github.com",
     "url": "https://kamiya.app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kamiya10/exptech-api-wrapper"
   },
   "files": [
     "dist",
