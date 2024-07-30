@@ -387,7 +387,7 @@ export class ExpTechApi extends EventEmitter {
 	 * @param {number} [page] 頁數
 	 * @returns {Promise<PartialReport[]>} 地震報告列表
 	 */
-	async getReports(limit?: number, page?: number): Promise<PartialReport[]> {
+	async getReportList(limit?: number, page?: number): Promise<PartialReport[]> {
 		const url = this.route.reportList(limit);
 		const data = await this.get(url);
 		for (const report of data) report.no = +report.id.split("-")[0];
