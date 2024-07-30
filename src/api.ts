@@ -229,6 +229,11 @@ export enum EewSource {
 	 * @link https://www.scdzj.gov.cn
 	 */
 	Scdzj = "scdzj",
+	/**
+	 * TREM 臺灣即時地震監測
+	 * @link https://exptech.com.tw/
+	 */
+	Trem = "trem",
 }
 
 /**
@@ -253,12 +258,19 @@ export enum EewStatus {
 	Test = 3,
 }
 
-export interface Eew {
+type AuthoritySource =
+	| EewSource.Cwa
+	| EewSource.Jma
+	| EewSource.Nied
+	| EewSource.Kma
+	| EewSource.Scdzj;
+
+export type Eew = {
 	type: "eew";
 	/**
 	 * 地震速報來源機關
 	 */
-	author: EewSource;
+	author: AuthoritySource;
 	/**
 	 * 地震速報 ID
 	 */
@@ -308,9 +320,70 @@ export interface Eew {
 		 */
 		max: number;
 	};
-	timestamp: number;
-	delay: number;
-}
+};
+
+export type TremEew = {
+	type: "eew";
+	/**
+	 * 地震速報來源機關
+	 */
+	author: EewSource.Trem;
+	/**
+	 * 地震速報 ID
+	 */
+	id: string;
+	/**
+	 * 地震速報報號
+	 */
+	serial: number;
+	/**
+	 * 地震速報狀態
+	 */
+	status: EewStatus;
+	/**
+	 * 是否有震源資料
+	 */
+	detail: 1 | 0;
+	/**
+	 * 地震速報是否為最終報
+	 */
+	final: 1 | 0;
+	/**
+	 * 地震速報參數
+	 */
+	eq: {
+		/**
+		 * 地震速報時間
+		 */
+		time: number;
+		/**
+		 * 地震震央預估經度
+		 */
+		lon: number;
+		/**
+		 * 地震震央預估緯度
+		 */
+		lat: number;
+		/**
+		 * 地震預估深度
+		 */
+		depth: number;
+		/**
+		 * 地震預估芮氏規模
+		 */
+		mag: number;
+		/**
+		 * 地震預估位置
+		 */
+		loc: string;
+		/**
+		 * 地震預估最大震度
+		 */
+		max: number;
+	};
+};
+
+export type EewType = Eew | TremEew;
 
 /**
  * 校時
@@ -325,6 +398,24 @@ export interface Ntp {
 	 * 校時板本
 	 */
 	version: number;
+}
+
+/**
+ * 身份驗證資訊
+ */
+export interface AuthenticationDetail {
+	/**
+	 * 身份驗證電子郵件
+	 */
+	email: string;
+	/**
+	 * 身份驗證密碼
+	 */
+	password: string;
+	/**
+	 * 身份驗證名稱
+	 */
+	name: string;
 }
 
 export const Intensity = [
@@ -343,10 +434,15 @@ export const Intensity = [
 export class ExpTechApi extends EventEmitter {
 	key: string;
 	route: Route;
+	headers: HeadersInit;
 
-	constructor(key?: string) {
+	constructor(key?: string, defaultRequestHeaders?: HeadersInit) {
 		super();
 		this.key = key ?? "";
+		this.headers = defaultRequestHeaders ?? {
+			Accept: "application/json",
+			"Content-Type": "application/json",
+		};
 		this.route = new Route({ key: this.key });
 	}
 
@@ -374,6 +470,28 @@ export class ExpTechApi extends EventEmitter {
 		if (!res.ok) throw new Error(`Server returned ${res.status}`);
 
 		return await res.json();
+	}
+
+	/**
+	 * Inner post request wrapper
+	 * @param {string} url
+	 * @returns {Promise<any>}
+	 */
+	private async post(url: string, body: BodyInit): Promise<Response> {
+		const request = new Request(url, {
+			method: "POST",
+			cache: "default",
+			headers: {
+				...this.headers,
+				Accept: "application/json",
+			},
+			body,
+		});
+		const res = await fetch(request);
+
+		if (!res.ok) throw new Error(`Server returned ${res.status}`);
+
+		return res;
 	}
 
 	async getStations(): Promise<Record<string, Station>> {
@@ -443,5 +561,20 @@ export class ExpTechApi extends EventEmitter {
 	async getEew(time: number = Date.now(), type?: EewSource): Promise<Eew[]> {
 		const url = this.route.eew(time, type);
 		return await this.get(url);
+	}
+
+	/**
+	 * 獲取身份驗證代碼
+	 * @param {AuthenticationDetail} options 身份驗證資訊
+	 * @returns {Promise<string>} 身份驗證 Token
+	 */
+	async getAuthToken(options: AuthenticationDetail): Promise<string> {
+		const url = this.route.login();
+		const body = JSON.stringify({
+			email: options.email,
+			pass: options.password,
+			name: options.name,
+		});
+		return (await this.post(url, body)).text();
 	}
 }

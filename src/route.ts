@@ -34,6 +34,10 @@ export default class Route {
 		)}.exptech.com.tw/websocket` as const;
 	}
 
+	login() {
+		return `https://api-1.exptech.dev/api/v3/et/login` as const;
+	}
+
 	reportList(limit: number = 50, page: number = 1) {
 		const parms = new URLSearchParams({
 			limit: `${limit}`,
