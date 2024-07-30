@@ -1,5 +1,5 @@
 {
-  "version": "3.1.2",
+  "version": "3.1.3",
   "name": "@kamiya4047/exptech-api-wrapper",
   "description": "ExpTech API wrapper",
   "unpkg": "dist/index.min.js",
