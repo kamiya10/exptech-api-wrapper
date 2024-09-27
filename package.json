@@ -41,7 +41,7 @@
   ],
   "devDependencies": {
     "@rollup/plugin-node-resolve": "15.2.3",
-    "rollup": "4.19.1",
+    "rollup": "2.79.2",
     "rollup-plugin-terser": "7.0.2",
     "rollup-plugin-typescript2": "0.36.0",
     "tsm": "2.3.0",
